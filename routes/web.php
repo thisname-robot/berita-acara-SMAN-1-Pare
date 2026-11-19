@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentController;
+use App\Http\Controllers\Admin\NavigationMenuController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomePage\HomePageController;
@@ -43,4 +44,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [SystemSettingController::class, 'update'])->name('settings.update');
     Route::post('/settings/backup', [SystemSettingController::class, 'backupDatabase'])->name('settings.backup');
+
+    // Manajemen Menu Navigasi
+    Route::get('/menus', [NavigationMenuController::class, 'index'])->name('menus.index');
+    Route::post('/menus', [NavigationMenuController::class, 'store'])->name('menus.store');
+    Route::patch('/menus/{menu}/toggle', [NavigationMenuController::class, 'toggleStatus'])->name('menus.toggle');
+    Route::delete('/menus/{menu}', [NavigationMenuController::class, 'destroy'])->name('menus.destroy');
 });

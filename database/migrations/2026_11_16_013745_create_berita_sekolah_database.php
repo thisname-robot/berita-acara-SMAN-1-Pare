@@ -78,6 +78,16 @@ return new class extends Migration
             $table->index(['article_id', 'is_approved']);
         });
 
+        Schema::create('navigation_menus', function (Blueprint $table) {
+            $table->id();
+            $table->string('label'); // Contoh: "SIMS SMANSA", "PPDB", "Akademik"
+            $table->string('url');   // Contoh: "https://sims.sman1pare.sch.id" atau "/kategori/prestasi"
+            $table->boolean('open_in_new_tab')->default(false);
+            $table->integer('order')->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+
 
     }
 
@@ -92,5 +102,6 @@ return new class extends Migration
         Schema::dropIfExists('tags');
         Schema::dropIfExists('article_tag');
         Schema::dropIfExists('comments');
+        Schema::dropIfExists('navigation_menus');
     }
 };
