@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('layouts.app', function ($view) {
-            $view->with('portalMenus', NavigationMenu::active()->get());
+        View::composer('*', function ($view) {
+            $view->with('portalMenus', \App\Models\NavigationMenu::rootActive()->get());
         });
     }
 }

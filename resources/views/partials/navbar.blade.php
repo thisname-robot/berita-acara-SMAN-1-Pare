@@ -1,11 +1,11 @@
 @php
     $fallbackNavItems = [
-        ['label' => 'Beranda', 'url' => url('/'), 'open_in_new_tab' => false],
-        ['label' => 'Profil', 'url' => url('/profil'), 'open_in_new_tab' => false],
-        ['label' => 'Berita & Artikel', 'url' => url('/berita-artikel'), 'open_in_new_tab' => false],
-        ['label' => 'Galeri', 'url' => url('/galeri'), 'open_in_new_tab' => false],
-        ['label' => 'Prestasi', 'url' => url('/prestasi'), 'open_in_new_tab' => false],
-        ['label' => 'Kontak', 'url' => url('/kontak'), 'open_in_new_tab' => false],
+        ['label' => 'Beranda', 'url' => url('/'), 'open_in_new_tab' => false, 'children' => []],
+        ['label' => 'Profil', 'url' => url('/profil'), 'open_in_new_tab' => false, 'children' => []],
+        ['label' => 'Berita & Artikel', 'url' => url('/berita-artikel'), 'open_in_new_tab' => false, 'children' => []],
+        ['label' => 'Galeri', 'url' => url('/galeri'), 'open_in_new_tab' => false, 'children' => []],
+        ['label' => 'Prestasi', 'url' => url('/prestasi'), 'open_in_new_tab' => false, 'children' => []],
+        ['label' => 'Kontak', 'url' => url('/kontak'), 'open_in_new_tab' => false, 'children' => []],
     ];
 
     $resolvedMenus =
@@ -16,6 +16,15 @@
                         'label' => $menu->label,
                         'url' => $menu->url,
                         'open_in_new_tab' => (bool) $menu->open_in_new_tab,
+                        'children' => $menu->activeChildren
+                            ->map(
+                                fn($child) => [
+                                    'label' => $child->label,
+                                    'url' => $child->url,
+                                    'open_in_new_tab' => (bool) $child->open_in_new_tab,
+                                ],
+                            )
+                            ->all(),
                     ],
                 )
                 ->all()
@@ -52,17 +61,54 @@
             aria-label="Navigasi utama desktop">
             @foreach ($resolvedMenus as $menu)
                 @php
+                    $hasChildren = !empty($menu['children']);
                     $isCurrent = !$menu['open_in_new_tab'] && rtrim($menu['url'], '/') === rtrim($currentUrl, '/');
                 @endphp
-                <a href="{{ $menu['url'] }}"
-                    @if ($menu['open_in_new_tab']) target="_blank" rel="noopener noreferrer" @endif
-                    @if ($isCurrent) aria-current="page" @endif
-                    class="min-h-[40px] px-3.5 py-2 rounded-full text-sm font-medium transition-colors inline-flex items-center gap-1 {{ $isCurrent ? 'bg-surface-container-lowest text-on-surface font-semibold shadow-sm' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container' }}">
-                    <span>{{ $menu['label'] }}</span>
-                    @if ($menu['open_in_new_tab'])
-                        <span class="material-symbols-outlined text-[15px]" aria-hidden="true">open_in_new</span>
-                    @endif
-                </a>
+
+                @if ($hasChildren)
+                    <!-- Menu dengan Sub-Menu (Dropdown) -->
+                    <div class="relative nav-dropdown" x-data="{ open: false }" @mouseenter="open = true"
+                        @mouseleave="open = false" @click.outside="open = false" @keydown.escape.window="open = false">
+                        <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true"
+                            class="nav-dropdown-trigger min-h-[40px] px-3.5 py-2 rounded-full text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors inline-flex items-center gap-1">
+                            <span>{{ $menu['label'] }}</span>
+                            <span class="material-symbols-outlined text-[16px] transition-transform duration-150"
+                                :class="open ? 'rotate-180' : ''" aria-hidden="true">expand_more</span>
+                        </button>
+
+                        <!-- Wrapper pt-2 menghilangkan celah hover agar menu tidak tertutup saat kursor turun -->
+                        <div x-show="open" x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="nav-dropdown-menu hidden absolute left-0 top-full pt-2 w-60 z-[70]"
+                            :class="open ? '!block' : 'hidden'">
+                            <div class="rounded-xl bg-white border border-outline-variant/40 shadow-xl py-1.5">
+                                @foreach ($menu['children'] as $child)
+                                    <a href="{{ $child['url'] }}"
+                                        @if ($child['open_in_new_tab']) target="_blank" rel="noopener noreferrer" @endif
+                                        class="px-4 py-2.5 text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low flex items-center justify-between gap-2 transition-colors">
+                                        <span>{{ $child['label'] }}</span>
+                                        @if ($child['open_in_new_tab'])
+                                            <span class="material-symbols-outlined text-[15px] text-outline"
+                                                aria-hidden="true">open_in_new</span>
+                                        @endif
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <!-- Menu Tunggal -->
+                    <a href="{{ $menu['url'] }}"
+                        @if ($menu['open_in_new_tab']) target="_blank" rel="noopener noreferrer" @endif
+                        @if ($isCurrent) aria-current="page" @endif
+                        class="min-h-[40px] px-3.5 py-2 rounded-full text-sm font-medium transition-colors inline-flex items-center gap-1 {{ $isCurrent ? 'bg-surface-container-lowest text-on-surface font-semibold shadow-sm' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container' }}">
+                        <span>{{ $menu['label'] }}</span>
+                    </a>
+                @endif
             @endforeach
         </nav>
 
@@ -133,17 +179,45 @@
         <nav class="flex flex-col gap-space-xs mt-1" aria-label="Menu utama seluler">
             @foreach ($resolvedMenus as $menu)
                 @php
+                    $hasChildren = !empty($menu['children']);
                     $isCurrent = !$menu['open_in_new_tab'] && rtrim($menu['url'], '/') === rtrim($currentUrl, '/');
                 @endphp
-                <a class="nav-link min-h-[44px] flex items-center justify-between px-space-md py-3 rounded-lg font-label-md text-label-md transition-colors {{ $isCurrent ? 'bg-surface-container-high text-on-surface font-semibold' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface' }}"
-                    href="{{ $menu['url'] }}"
-                    @if ($menu['open_in_new_tab']) target="_blank" rel="noopener noreferrer" @endif
-                    @if ($isCurrent) aria-current="page" @endif>
-                    <span>{{ $menu['label'] }}</span>
-                    <span class="material-symbols-outlined text-[18px]" aria-hidden="true">
-                        {{ $menu['open_in_new_tab'] ? 'open_in_new' : 'chevron_right' }}
-                    </span>
-                </a>
+
+                @if ($hasChildren)
+                    <div class="rounded-lg overflow-hidden" x-data="{ subOpen: false }">
+                        <button type="button" @click="subOpen = !subOpen" :aria-expanded="subOpen"
+                            class="mobile-sub-trigger w-full min-h-[44px] flex items-center justify-between px-space-md py-3 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors">
+                            <span>{{ $menu['label'] }}</span>
+                            <span class="material-symbols-outlined text-[18px] transition-transform duration-150"
+                                :class="subOpen ? 'rotate-180' : ''" aria-hidden="true">expand_more</span>
+                        </button>
+                        <div x-show="subOpen"
+                            class="mobile-sub-panel hidden pl-4 pr-2 py-1 space-y-1"
+                            :class="subOpen ? '!block' : 'hidden'">
+                            @foreach ($menu['children'] as $child)
+                                <a href="{{ $child['url'] }}"
+                                    @if ($child['open_in_new_tab']) target="_blank" rel="noopener noreferrer" @endif
+                                    class="min-h-[40px] flex items-center justify-between px-3 py-2 rounded-md text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+                                    <span>{{ $child['label'] }}</span>
+                                    @if ($child['open_in_new_tab'])
+                                        <span class="material-symbols-outlined text-[15px]"
+                                            aria-hidden="true">open_in_new</span>
+                                    @endif
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <a class="nav-link min-h-[44px] flex items-center justify-between px-space-md py-3 rounded-lg font-label-md text-label-md transition-colors {{ $isCurrent ? 'bg-surface-container-high text-on-surface font-semibold' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface' }}"
+                        href="{{ $menu['url'] }}"
+                        @if ($menu['open_in_new_tab']) target="_blank" rel="noopener noreferrer" @endif
+                        @if ($isCurrent) aria-current="page" @endif>
+                        <span>{{ $menu['label'] }}</span>
+                        <span class="material-symbols-outlined text-[18px]" aria-hidden="true">
+                            {{ $menu['open_in_new_tab'] ? 'open_in_new' : 'chevron_right' }}
+                        </span>
+                    </a>
+                @endif
             @endforeach
         </nav>
 
@@ -156,3 +230,40 @@
         </div>
     </div>
 </aside>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fallback vanilla JS jika Alpine.js belum terpasang di layout publik
+        if (typeof window.Alpine === 'undefined') {
+            document.querySelectorAll('.nav-dropdown').forEach(function(dropdown) {
+                const trigger = dropdown.querySelector('.nav-dropdown-trigger');
+                const menu = dropdown.querySelector('.nav-dropdown-menu');
+                if (!trigger || !menu) return;
+
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isHidden = menu.classList.contains('hidden');
+                    menu.classList.toggle('hidden', !isHidden);
+                    trigger.setAttribute('aria-expanded', String(isHidden));
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target)) {
+                        menu.classList.add('hidden');
+                        trigger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.mobile-sub-trigger').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const panel = btn.nextElementSibling;
+                    if (!panel) return;
+                    const isHidden = panel.classList.contains('hidden');
+                    panel.classList.toggle('hidden', !isHidden);
+                    btn.setAttribute('aria-expanded', String(isHidden));
+                });
+            });
+        }
+    });
+</script>

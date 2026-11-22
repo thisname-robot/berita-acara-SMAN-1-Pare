@@ -80,6 +80,7 @@ return new class extends Migration
 
         Schema::create('navigation_menus', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('parent_id')->nullable()->constrained('navigation_menus')->cascadeOnDelete();
             $table->string('label'); // Contoh: "SIMS SMANSA", "PPDB", "Akademik"
             $table->string('url');   // Contoh: "https://sims.sman1pare.sch.id" atau "/kategori/prestasi"
             $table->boolean('open_in_new_tab')->default(false);

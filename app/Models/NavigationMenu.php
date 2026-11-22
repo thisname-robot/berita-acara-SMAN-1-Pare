@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class NavigationMenu extends Model
 {
     protected $fillable = [
+        'parent_id',
         'label',
         'url',
         'open_in_new_tab',
@@ -19,8 +20,32 @@ class NavigationMenu extends Model
         'is_active' => 'boolean',
     ];
 
-    public function scopeActive($query)
+    public function parent()
     {
-        return $query->where('is_active', true)->orderBy('order')->orderBy('id');
+        return $this->belongsTo(NavigationMenu::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(NavigationMenu::class, 'parent_id')
+            ->orderBy('order')
+            ->orderBy('id');
+    }
+
+    public function activeChildren()
+    {
+        return $this->hasMany(NavigationMenu::class, 'parent_id')
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->orderBy('id');
+    }
+
+    public function scopeRootActive($query)
+    {
+        return $query->whereNull('parent_id')
+            ->where('is_active', true)
+            ->with('activeChildren')
+            ->orderBy('order')
+            ->orderBy('id');
     }
 }

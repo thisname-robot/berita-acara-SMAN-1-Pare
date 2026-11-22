@@ -48,6 +48,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Manajemen Menu Navigasi
     Route::get('/menus', [NavigationMenuController::class, 'index'])->name('menus.index');
     Route::post('/menus', [NavigationMenuController::class, 'store'])->name('menus.store');
+    Route::put('/menus/{menu}', [NavigationMenuController::class, 'update'])->name('menus.update');
     Route::patch('/menus/{menu}/toggle', [NavigationMenuController::class, 'toggleStatus'])->name('menus.toggle');
     Route::delete('/menus/{menu}', [NavigationMenuController::class, 'destroy'])->name('menus.destroy');
 });
