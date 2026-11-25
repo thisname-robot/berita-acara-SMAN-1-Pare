@@ -82,7 +82,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parent_id')->nullable()->constrained('navigation_menus')->cascadeOnDelete();
             $table->string('label'); // Contoh: "SIMS SMANSA", "PPDB", "Akademik"
-            $table->string('url');   // Contoh: "https://sims.sman1pare.sch.id" atau "/kategori/prestasi"
+            $table->string('url')->nullable();   // Contoh: "https://sims.sman1pare.sch.id" atau "/kategori/prestasi"
             $table->boolean('open_in_new_tab')->default(false);
             $table->integer('order')->default(0);
             $table->boolean('is_active')->default(true);

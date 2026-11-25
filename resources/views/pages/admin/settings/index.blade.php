@@ -18,7 +18,7 @@
     @if (session('status'))
         <div role="status"
             class="mt-6 rounded-lg bg-[#ECFDF5] border border-[#A7F3D0] px-4 py-3 text-sm text-[#047857] flex items-center gap-2">
-            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+            <img src="{{ asset('assets/icon/archive-minimalistic-svgrepo-com.svg') }}" alt="" class="w-4 h-4">
             <span>{{ session('status') }}</span>
         </div>
     @endif
@@ -133,7 +133,7 @@
                         @csrf
                         <button type="submit"
                             class="min-h-[40px] w-full px-4 py-2 rounded-lg border border-[#CBD5E1] bg-white text-xs font-semibold text-[#0F172A] hover:bg-[#F1F5F9] transition-colors flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-[16px]">database</span>
+                            <img src="{{ asset('assets/icon/database-svgrepo-com.svg') }}" alt="" class="w-5 h-5">
                             <span>Jalankan Backup Sekarang</span>
                         </button>
                     </form>

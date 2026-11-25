@@ -208,30 +208,48 @@
                                 <a href="{{ route('admin.menus.index') }}"
                                     @if (request()->routeIs('admin.menus.*')) aria-current="page" @endif
                                     class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center gap-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.menus.*') ? 'bg-[#0F172A] text-white' : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]' }}">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.75"
-                                        stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48。394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.75" stroke="currentColor" aria-hidden="true">
+                                        <rect x="3" y="3" width="18" height="18" rx="4"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <circle cx="8" cy="8.5" r="1" fill="currentColor"
+                                            stroke="none" />
+                                        <circle cx="8" cy="12" r="1" fill="currentColor"
+                                            stroke="none" />
+                                        <circle cx="8" cy="15.5" r="1" fill="currentColor"
+                                            stroke="none" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.5 8.5H16.5" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.5 12H16.5" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.5 15.5H16.5" />
                                     </svg>
-                                    <span>Menus</span>
+                                    <span>Menu</span>
                                 </a>
                             </li>
                         @endif
 
                         <!-- Pengaturan & Pemeliharaan Sistem -->
                         @if (Route::has('admin.settings.index'))
-                            <li>
-                                <a href="{{ route('admin.settings.index') }}"
-                                    @if (request()->routeIs('admin.settings.*')) aria-current="page" @endif
-                                    class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center gap-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.settings.*') ? 'bg-[#0F172A] text-white' : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]' }}">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.75"
-                                        stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                                    </svg>
-                                    <span>Pengaturan & Pemeliharaan Sistem</span>
-                                </a>
-                            </li>
+                            <a href="{{ route('admin.settings.index') }}"
+                                @if (request()->routeIs('admin.settings.*')) aria-current="page" @endif
+                                class="min-h-[44px] px-3 py-2.5 rounded-lg flex items-center gap-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.settings.*') ? 'bg-[#0F172A] text-white' : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]' }}">
+                                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.75"
+                                    stroke="currentColor" aria-hidden="true">
+                                    <!-- Baris Atas -->
+                                    <circle cx="14.5" cy="7" r="3" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2 7H3" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 7H11.5" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.5 7H22" />
+
+                                    <!-- Baris Bawah -->
+                                    <circle cx="9.5" cy="17" r="3" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2 17H6.5" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12.5 17H18" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 17H22" />
+                                </svg>
+                                <span>Pengaturan</span>
+                            </a>
                         @endif
                     </ul>
                 </div>
